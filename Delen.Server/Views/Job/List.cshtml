@@ -1,0 +1,20 @@
+﻿
+@using System.Collections
+@model IEnumerable<Delen.Core.Entities.Job> 
+
+ 
+@foreach (var job in Model)
+{
+    <div>
+   InitiatedBy: <span> @job.InitiatedBy </span>
+     </div> 
+    <div>
+      Runner: <span> @job.Runner </span>
+     </div> 
+       <div>
+      Arguments: <span> @job.Arguments </span>
+     </div> 
+      <div>
+          <a href="@Url.Action("GetArtifacts", new{id = job.Id})">Download Artifacts </a>
+     </div> 
+}
