@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>StringFormat</id>
+    <version>1.0.0</version>
+    <title>StringFormat</title>
+    <authors>Brian Ball</authors>
+    <owners>Brian Ball</owners>
+    <licenseUrl>https://github.com/littlebits/string_format</licenseUrl>
+    <projectUrl>https://github.com/littlebits/string_format</projectUrl>
+    <iconUrl>http://littlebits.github.com/string_format/images/SFormat.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An enhancement to the String.Format library that allows for named place holders.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>littlebits string format</tags>
+  </metadata>
+</package>
