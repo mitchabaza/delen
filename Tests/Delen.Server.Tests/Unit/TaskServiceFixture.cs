@@ -76,10 +76,10 @@ namespace Delen.Server.Tests.Unit
         [Test]
         public void RequestWork_ShouldAssignWorkerToWorkItemUsingIPAddress()
         {
-            var ip = IPAddress.Parse("192.111.22.11");
+            var ip = Guid.NewGuid();
             var registration = AutoFixture.Create<WorkerRegistration>();
 
-            _mockWorkerRegistry.Setup(m => m.GetRegistration(It.IsAny<IPAddress>())).Returns(registration);
+            _mockWorkerRegistry.Setup(m => m.GetRegistration(It.IsAny<Guid>())).Returns(registration);
             _mockRepository.Setup(r => r.Query<WorkItem>())
                 .Returns(new List<WorkItem>() {CreatePendingWorkItem(1212)}.AsQueryable());
 
@@ -87,7 +87,7 @@ namespace Delen.Server.Tests.Unit
             _mockRepository.Setup(m => m.Put(It.Is<WorkItem>(s => s.AssignedToWorker.Id.Equals(registration.Id))))
                 .Verifiable();
 
-            _taskServiceWithMockRepository.RequestWork(ip);
+            _taskServiceWithMockRepository.RequestWork(new WorkerRequest(ip));
 
             _mockRepository.VerifyAll();
         }
@@ -98,9 +98,9 @@ namespace Delen.Server.Tests.Unit
             _fakeRepository.WorkItems.Add(CreatePendingWorkItem(44));
             var registration = AutoFixture.Create<WorkerRegistration>();
 
-            _mockWorkerRegistry.Setup(m => m.GetRegistration(It.IsAny<IPAddress>())).Returns(registration);
+            _mockWorkerRegistry.Setup(m => m.GetRegistration(It.IsAny<Guid>())).Returns(registration);
 
-            var ipAddress = new IPAddress(098098098);
+            var ipAddress = Guid.NewGuid();
 
             var runCount = 0;
             Action action = () =>
@@ -117,15 +117,15 @@ namespace Delen.Server.Tests.Unit
             _fakeRepository.PreQueryAction = action;
 
 
-            var slowThread = new Thread(() => 
-                
-                _taskRequest1 = _taskServiceWithFakeRepository.RequestWork(ipAddress))
+            var slowThread = new Thread(() =>
+
+                _taskRequest1 = _taskServiceWithFakeRepository.RequestWork(new WorkerRequest(ipAddress)))
             {
                 Name = SlowThreadName
             };
             var fastThread = new Thread(() =>
-                
-                _taskRequest2 = _taskServiceWithFakeRepository.RequestWork(ipAddress))
+
+                _taskRequest2 = _taskServiceWithFakeRepository.RequestWork(new WorkerRequest(ipAddress)))
             {
                 Name = FastThreadName
             };
@@ -143,8 +143,8 @@ namespace Delen.Server.Tests.Unit
         [Test(Description = "Tests that resource locking is performed such that two or more simultaneous requests to not get assigned the same WorkItem")]
         public void RequestWork_ShouldLockOtherRequests_WhenMultiplePendingWorkItems()
         {
-            var ipAddress2 = new IPAddress(098098098);
-            var ipAddress1 = new IPAddress(23098098);
+            var ipAddress2 = Guid.NewGuid();
+            var ipAddress1 = Guid.NewGuid();
 
             _mockWorkerRegistry.Setup(r => r.GetRegistration(ipAddress1))
                 .Returns(AutoFixture.Create<WorkerRegistration>());
@@ -170,11 +170,11 @@ namespace Delen.Server.Tests.Unit
             _fakeRepository.PreQueryAction = action;
 
 
-            var thread1 = new Thread(() => _taskRequest1 = _taskServiceWithFakeRepository.RequestWork(ipAddress1))
+            var thread1 = new Thread(() => _taskRequest1 = _taskServiceWithFakeRepository.RequestWork(new WorkerRequest(ipAddress1)))
             {
                 Name = SlowThreadName
             };
-            var thread2 = new Thread(() => _taskRequest2 = _taskServiceWithFakeRepository.RequestWork(ipAddress1))
+            var thread2 = new Thread(() => _taskRequest2 = _taskServiceWithFakeRepository.RequestWork(new WorkerRequest(ipAddress1)))
             {
                 Name = FastThreadName
             };
@@ -196,7 +196,7 @@ namespace Delen.Server.Tests.Unit
 // ReSharper disable PossibleNullReferenceException
             var registration = AutoFixture.Create<WorkerRegistration>();
 
-            _mockWorkerRegistry.Setup(m => m.GetRegistration(It.IsAny<IPAddress>())).Returns(registration);
+            _mockWorkerRegistry.Setup(m => m.GetRegistration(It.IsAny<Guid>())).Returns(registration);
 
             WorkItem workItem = CreatePendingWorkItem(213);
             Assert.IsNotNull(_fakeRepository);
@@ -205,7 +205,7 @@ namespace Delen.Server.Tests.Unit
             //sanity check
             _fakeRepository.Query<WorkItem>().SingleOrDefault().Status.Should().Be(WorkItemStatus.Pending);
 
-            _taskServiceWithFakeRepository.RequestWork(new IPAddress(234432));
+            _taskServiceWithFakeRepository.RequestWork(new WorkerRequest(Guid.NewGuid()));
 
             _fakeRepository.Query<WorkItem>().SingleOrDefault().Status.Should().Be(WorkItemStatus.InProgress);
 // ReSharper enable PossibleNullReferenceException
@@ -259,7 +259,7 @@ namespace Delen.Server.Tests.Unit
             _mockRepository.Setup(r => r.Get<WorkItem>(taskResult.WorkItemId)).Returns(workItem);
             _mockRepository.Setup(r => r.Put(It.Is<WorkItem>(wi => wi.Status.Equals(workItemStatus)))).Verifiable();
 
-            _taskServiceWithMockRepository.WorkComplete(taskResult);
+            _taskServiceWithMockRepository.WorkComplete(new WorkerRequest<TaskExecutionResult>(Guid.NewGuid()) { Body = taskResult });
 
             _mockRepository.VerifyAll();
         }
@@ -273,7 +273,7 @@ namespace Delen.Server.Tests.Unit
             workItem.Pending();
             _mockRepository.Setup(r => r.Get<WorkItem>(taskResult.WorkItemId)).Returns(workItem);
 
-            var response = _taskServiceWithMockRepository.WorkComplete(taskResult);
+            var response = _taskServiceWithMockRepository.WorkComplete(new WorkerRequest<TaskExecutionResult>(Guid.NewGuid()) { Body = taskResult });
 
             response.Succeeded.Should().BeFalse();
         }
@@ -287,7 +287,7 @@ namespace Delen.Server.Tests.Unit
             workItem.Pending();
             _mockRepository.Setup(r => r.Get<WorkItem>(taskResult.WorkItemId)).Returns((WorkItem) null);
 
-            var response = _taskServiceWithMockRepository.WorkComplete(taskResult);
+            var response = _taskServiceWithMockRepository.WorkComplete(new WorkerRequest<TaskExecutionResult>(Guid.NewGuid()) { Body = taskResult });
 
             response.Succeeded.Should().BeFalse();
         }

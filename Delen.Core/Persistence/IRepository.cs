@@ -7,7 +7,8 @@ namespace Delen.Core.Persistence
     {
         T Get<T>(int id) where T : class;
         void Put<T>(T item) where T : class;
-        void Delete(Entity item);
+        void Delete<T>(T item) where T:Entity;
         IQueryable<T> Query<T>() where T : class;
+        
     }
 }

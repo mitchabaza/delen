@@ -13,17 +13,22 @@ namespace Delen.Agent.Communication
     {
         private readonly IUriFactory _uriFactory;
         private static readonly ILog Logger = LogManager.GetLogger(typeof (ServerChannel));
-
+        private Guid? Token { get; set; }
         public ServerChannel(IUriFactory uriFactory)
         {
             _uriFactory = uriFactory;
         }
 
-        public Response Register(RegisterWorkerRequest request)
+        public Response<Guid>  Register(RegisterWorkerRequest request)
         {
             Logger.Info("Registering worker {Worker}".FormatWith(new {Worker = request.IPAddress}));
 
-            return SendCommand <Response>(_uriFactory.Create(EndPoint.RegisterAgent), request);
+            var command= SendCommand <Response<Guid>>(_uriFactory.Create(EndPoint.RegisterAgent), request);
+            if (command.Succeeded)
+            {
+                Token = command.Payload;
+            }
+            return command;
         }
 
         private T SendCommand<T>(Uri endpoint, object payload = null) where T : class
@@ -33,6 +38,8 @@ namespace Delen.Agent.Communication
             httpWebRequest.Method = "POST";
             httpWebRequest.Accept = "application/json";
             httpWebRequest.Headers.Add(ServerConfiguration.Headers.Version,(typeof (ServerChannel).Assembly.GetName().Version.ToString()));
+            httpWebRequest.Headers.Add(ServerConfiguration.Headers.WorkerRegistrationToken, Token.HasValue?Token.ToString():"");
+       
             using (var writer = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 writer.Write(JsonNetHelper.Serialize(payload));
@@ -53,10 +60,10 @@ namespace Delen.Agent.Communication
             }
         }
 
-        public Response UnRegister(UnregisterWorkerRequest request)
+        public Response UnRegister()
         {
-            Logger.Info("Unregistering worker {Worker}".FormatWith(new {Worker = request.IPAddress}));
-
+            Logger.Info("Unregistering worker {Token}".FormatWith(new {Token}));
+            var request = new UnregisterWorkerRequest(Token.Value);
             return SendCommand<Response>(_uriFactory.Create(EndPoint.UnregisterAgent), request);
         }
 

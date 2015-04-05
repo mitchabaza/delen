@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Net;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
@@ -50,7 +51,7 @@ namespace Delen.Server.Configuration
 
             RegisterRaven(builder);
 
-            RegisterAutomapper(builder);
+            RegisterAutoMapper(builder);
 
             RegisterWebServer(builder);
 
@@ -58,6 +59,7 @@ namespace Delen.Server.Configuration
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(Container));
 
+            return;
             var startables = Container.Resolve<IEnumerable<IStartable>>();
 
             foreach (var startable in startables)
@@ -75,6 +77,7 @@ namespace Delen.Server.Configuration
                 .Except<Controller>()
                 .Except<BackgroundTaskScheduler>()
                 .Except<MultiTenantDocumentStore>()
+              //  .Except<WorkerRequestContext>()
                 .AsImplementedInterfaces()
                 .AsSelf();
             builder.Register(
@@ -105,7 +108,7 @@ namespace Delen.Server.Configuration
                 c => new JobChunkingStrategyFactory(3, tempPath)).AsImplementedInterfaces();
         }
 
-        private static void RegisterAutomapper(ContainerBuilder builder)
+        private static void RegisterAutoMapper(ContainerBuilder builder)
         {
             builder.Register(ctx => new ConfigurationStore(new TypeMapFactory(), MapperRegistry.Mappers))
                 .AsImplementedInterfaces()

@@ -6,11 +6,16 @@ using Validation;
 
 namespace Delen.Core.Tasks
 {
-    public class TaskProgress
+    public class WorkerRequest<T> : WorkerRequest
     {
-        public DateTime Time { get; set; }
-        public string Output { get; set; }
-    }
+        public T Body { get; set; }
+
+        public WorkerRequest(Guid? token) : base(token)
+        {
+        }
+
+     }
+
     public class TaskExecutionResult
     {
         private List<string> _messages;

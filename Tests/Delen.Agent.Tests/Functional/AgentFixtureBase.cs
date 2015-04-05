@@ -21,25 +21,31 @@ namespace Delen.Agent.Tests.Functional
         public override void SetupTest()
         {
             base.SetupTest();
-            foreach (var process in Process.GetProcessesByName("delen.agent.exe"))
+            var processes = Process.GetProcessesByName("delen.agent.exe");
+            foreach (var process in processes)
             {
-                process.Kill();
+                KillSilently(process);
             }
         }
 
         public override void TearDownTest()
         {
-            if (Process != null)
+            KillSilently(Process);
+            base.TearDownTest();
+        }
+
+        private void KillSilently(Process process)
+        {
+            if (process != null)
 
                 try
                 {
-                    Process.Kill();
+                    process.Kill();
                 }
-                catch (Exception e)
+                catch
                 {
-                    Console.WriteLine(e);
+                    //Console.WriteLine(e);
                 }
-            base.TearDownTest();
         }
 
         protected void StartAgent()
@@ -89,7 +95,7 @@ namespace Delen.Agent.Tests.Functional
 
         private void p_Exited(object sender, EventArgs e)
         {
-            Console.WriteLine("exited");
+            Console.WriteLine(@"exited");
         }
     }
 }

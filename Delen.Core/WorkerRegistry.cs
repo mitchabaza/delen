@@ -1,15 +1,17 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using Delen.Common;
 using Delen.Core.Communication;
 using Delen.Core.Entities;
 using Delen.Core.Persistence;
+using Raven.Abstractions.Extensions;
 
 namespace Delen.Core
 {
-    public class WorkerRegistry:IWorkerRegistry
+    public class WorkerRegistry : IWorkerRegistry
     {
         private readonly IRepository _repository;
         private readonly IMappingEngine _mappingEngine;
@@ -20,53 +22,71 @@ namespace Delen.Core
             _mappingEngine = mappingEngine;
         }
 
-        public Response Register(RegisterWorkerRequest registerWorkerRequest)
+        //public Response Register(RegisterWorkerRequest registerWorkerRequest)
+        //{
+        //    WorkerRegistration entity = _mappingEngine.Map<RegisterWorkerRequest, WorkerRegistration>(registerWorkerRequest);
+        //    var existing = FindExistingRegistration(registerWorkerRequest);
+        //    if (existing != null)
+        //    {
+        //        existing.AsOf = DateTime.Now;
+        //        existing.Activate();
+        //        _repository.Put(existing);
+        //        return new Response(true, string.Empty);
+        //    }
+        //    entity.AsOf = DateTime.Now;
+        //    _repository.Put(entity);
+        //    return new Response (true, string.Empty);
+        //}
+
+        public Response<Guid> Register(RegisterWorkerRequest registerWorkerRequest)
         {
+        
+            CleanUp(registerWorkerRequest);
             WorkerRegistration entity =
                 _mappingEngine.Map<RegisterWorkerRequest, WorkerRegistration>(registerWorkerRequest);
-            var existing = FindExistingRegistration(registerWorkerRequest);
+            _repository.Put(entity);
+
+            return new Response<Guid>(true, "", entity.Token);
+        }
+
+        private void CleanUp(RegisterWorkerRequest request)
+        {
+            var registrations =
+            _repository.Query<WorkerRegistration>().Where(w => w.Name.Equals(request.Name));
+
+            if (registrations.Any())
+            {
+                registrations.ToList().ForEach(r => _repository.Delete(r));
+            }
+        }
+
+
+        public Response UnRegister(UnregisterWorkerRequest request)
+        {
+            var existing = FindExistingRegistration(request.Token);
             if (existing != null)
             {
-                existing.AsOf = DateTime.Now;
-                existing.Activate();
-                _repository.Put(existing);
-                return new Response(true, string.Empty);
+                _repository.Delete(existing);
             }
-            entity.AsOf = DateTime.Now;
-            _repository.Put(entity);
-            return new Response (true, string.Empty);
+            return new Response(true);
         }
 
-        public Response UnRegister(UnregisterWorkerRequest unregisterWorkerRequest)
+        public WorkerRegistration GetRegistration(Guid token)
         {
-            var entity = FindExistingRegistration(unregisterWorkerRequest);
-
-            entity.Deactivate();
-
-            _repository.Put(entity);
-
-            return new Response(true, "Registered Worker with {Id}".FormatWith(new {entity.Id}));
+            return FindExistingRegistration(token);
         }
 
-        public WorkerRegistration GetRegistration(IPAddress ipAddress)
+        public bool IsRegisteredWorker(Guid token)
         {
-            return FindExistingRegistration(ipAddress.ToString());
+            return FindExistingRegistration(token) != null;
         }
 
-        public bool IsRegisteredWorker(IPAddress ipAddress)
-        {
-            return FindExistingRegistration(ipAddress.ToString()) != null;
-        }
 
-        private WorkerRegistration FindExistingRegistration(WorkerRegistrationRequestBase registerWorkerRequest)
-        {
-            return FindExistingRegistration(registerWorkerRequest.IPAddress);
-        }
-        private WorkerRegistration FindExistingRegistration(string ipaddress)
+        private WorkerRegistration FindExistingRegistration(Guid token)
         {
             var existing =
                 _repository.Query<WorkerRegistration>()
-                    .FirstOrDefault(w => w.IPAddress.Equals(ipaddress));
+                    .FirstOrDefault(w => w.Token.Equals(token));
             return existing;
         }
     }

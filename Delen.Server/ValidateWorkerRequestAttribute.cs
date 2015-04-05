@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Delen.Common;
 using Delen.Core;
 using Delen.Core.Communication;
+using Delen.Server.Views;
 
 namespace Delen.Server
 {
@@ -18,15 +19,17 @@ namespace Delen.Server
         {
             _checkThatAgentIsRegistered = checkThatAgentIsRegistered;
             AssemblyVersion =
-                typeof (ValidateWorkerRequestAttribute).Assembly.GetName().Version.ToString();
+                typeof(ValidateWorkerRequestAttribute).Assembly.GetName().Version.ToString();
         }
 
         public IWorkerRegistry WorkerRegistry { get; set; }
         private string AssemblyVersion { get; set; }
 
+        public IWorkerRequestContext Context{ get; set; }
+     
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (_checkThatAgentIsRegistered && !IsRegisteredWorker(filterContext))
+            if (_checkThatAgentIsRegistered && !IsRegisteredWorker())
             {
                 filterContext.Result = new JsonResult()
                 {
@@ -35,7 +38,7 @@ namespace Delen.Server
                         {
                             Message = "Worker at {IPAddress} has not yet registered."
                                 .FormatWith(
-                                    new {IPAddress = filterContext.HttpContext.Request.UserIPAddress()})
+                                    new { IPAddress = filterContext.HttpContext.Request.UserIPAddress() })
                         }
                 };
                 return;
@@ -48,7 +51,7 @@ namespace Delen.Server
                     Data =
                         "Client is using an out-of-date version. Please upgrade to {AssemblyVersion}"
                             .FormatWith(
-                                new {AssemblyVersion})
+                                new { AssemblyVersion })
                 };
                 return;
             }
@@ -56,9 +59,11 @@ namespace Delen.Server
             base.OnActionExecuting(filterContext);
         }
 
-        private bool IsRegisteredWorker(ControllerContext filterContext)
+        private bool IsRegisteredWorker()
         {
-            return WorkerRegistry.IsRegisteredWorker(filterContext.HttpContext.Request.UserIPAddress());
+            if (!Context.Token.HasValue)
+                return false;
+            return WorkerRegistry.IsRegisteredWorker(Context.Token.Value);
         }
     }
 }

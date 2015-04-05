@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Threading;
 using Raven.Abstractions.Data;
+using Raven.Client.Linq;
 
 namespace Delen.Agent.Tests.Functional
 {
@@ -37,12 +38,12 @@ namespace Delen.Agent.Tests.Functional
 
             StopAgent();
             //assert
-            workerRegistration.Host.Should().Be(Dns.GetHostName());
+            workerRegistration.Name.Should().Be(Dns.GetHostName());
             workerRegistration.CreationDate.Should().BeAfter(startDate);
         }
 
         [Test]
-        [Ignore]
+       
         public void Agent_ShouldUnRegisterOnShutdown()
         {
             //arrange
@@ -51,35 +52,38 @@ namespace Delen.Agent.Tests.Functional
            
             //act
             StartAgent();
-            Thread.Sleep(2000);
+            Thread.Sleep(4000);
 
             WorkerRegistration workerRegistration = null;
-            DocumentStore.Changes().ForDocumentsStartingWith("workerregistration").Subscribe(
-                new DocumentObserver(a =>
-                {
-                    using (var session = DocumentStore.OpenSession())
-                    {
-                        workerRegistration = session.Load<WorkerRegistration>(a.Id);
-                        if (workerRegistration.Active )
-                        {
-                            workerRegistration = null;
-                        }
-                    }
-                }));
-               DocumentStore.Changes().WaitForAllPendingSubscriptions();
+            //DocumentStore.Changes().ForDocumentsStartingWith("workerregistration").Subscribe(
+            //    new DocumentObserver(a =>
+            //    {
+            //        if (a.Type.Equals(DocumentChangeTypes.Delete))
+            //        {
+            //            using (var session = DocumentStore.OpenSession())
+            //            {
+            //                workerRegistration = session.Load<WorkerRegistration>(a.Id);
+                             
+            //            }
+            //        }
+                   
+            //    }));
+            //   DocumentStore.Changes().WaitForAllPendingSubscriptions();
          
             StopAgent();
            
-            do
-            {
-                // ReSharper disable once LoopVariableIsNeverChangedInsideLoop          
-            } while (workerRegistration == null && AgentStoppedFor < TimeSpan.FromSeconds(5));
+            //do
+            //{
+            //    // ReSharper disable once LoopVariableIsNeverChangedInsideLoop          
+            //} while (workerRegistration == null && AgentStoppedFor < TimeSpan.FromSeconds(20));
 
-           
+
+            using (var session = DocumentStore.OpenSession())
+            {
+                session.Query<WorkerRegistration>().Where(w => w.Name.Equals(Dns.GetHostName()));
+            }
             //assert
-            workerRegistration.Host.Should().Be(Dns.GetHostName());
-            workerRegistration.CreationDate.Should().BeAfter(startDate);
-            workerRegistration.Active.Should().BeFalse();
+            workerRegistration.Should().BeNull();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Delen.Core.Communication;
+﻿using System;
+using Delen.Core.Communication;
 
 namespace Delen.Agent.Communication
 {
@@ -15,17 +16,17 @@ namespace Delen.Agent.Communication
         }
 
 
-        public bool Register()
+        public Response<Guid> Register(RegisterWorkerRequest request)
         {
-            return _serverChannel.Register(WorkerRegistrationRequestBase.Create<RegisterWorkerRequest>())
-                .Succeeded;
-            
+            return _serverChannel.Register(request);
+
+
         }
 
         public bool UnRegister()
         {
-            var command = WorkerRegistrationRequestBase.Create<UnregisterWorkerRequest>();
-            return _serverChannel.UnRegister(command).Succeeded;
+            
+            return _serverChannel.UnRegister().Succeeded;
         }
     }
 }

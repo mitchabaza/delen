@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Delen.Core.Communication;
 using Delen.Core.Entities;
 
@@ -6,9 +7,9 @@ namespace Delen.Core
 {
     public interface IWorkerRegistry
     {
-        Response Register(RegisterWorkerRequest registerWorkerRequest);
-        Response  UnRegister(UnregisterWorkerRequest registerWorkerRequest);
-        WorkerRegistration GetRegistration(IPAddress ipAddress);
-        bool IsRegisteredWorker(IPAddress ipAddress);
+        Response<Guid> Register(RegisterWorkerRequest registerWorkerRequest);
+        Response UnRegister(UnregisterWorkerRequest request);
+        WorkerRegistration GetRegistration(Guid token);
+        bool IsRegisteredWorker(Guid ipAddress);
     }
 }

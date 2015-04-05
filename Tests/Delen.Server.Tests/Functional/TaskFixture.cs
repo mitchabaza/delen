@@ -30,9 +30,9 @@ namespace Delen.Server.Tests.Functional
         public void RequestWork_ShouldReturnWorkItemAsTask_WhenWorkIsAvailable()
         {
            var jobid= QueueJob();
-            RegisterAgent();
+           var token= RegisterAgent(AutoFixture.Create<RegisterWorkerRequest>());
             var requestWorkResponse =
-                ServerChannel.SendRequest<Response<TaskRequest>>(UriFactory.Create(EndPoint.RequestWork));
+                ServerChannel.SendAgentRequest<Response<TaskRequest>>(UriFactory.Create(EndPoint.RequestWork),token);
             requestWorkResponse.Payload.NoWorkAvailable.Should().BeFalse();
 
             WorkItem workItem;
@@ -50,10 +50,10 @@ namespace Delen.Server.Tests.Functional
         {
             var jobId=QueueJob();
 
-             RegisterAgent();
-          
+          var token=  RegisterAgent(AutoFixture.Create<RegisterWorkerRequest>());
+
             var requestWorkResponse =
-                ServerChannel.SendRequest<Response<TaskRequest>>(UriFactory.Create(EndPoint.RequestWork));
+                ServerChannel.SendAgentRequest<Response<TaskRequest>>(UriFactory.Create(EndPoint.RequestWork), token);
             requestWorkResponse.Payload.NoWorkAvailable.Should().BeFalse();
 
             using (var session = DocumentStore.OpenSession())
@@ -74,16 +74,16 @@ namespace Delen.Server.Tests.Functional
             return queueResponse.EntityIdentifier;
         }
 
-        private void RegisterAgent()
+        private Guid RegisterAgent(RegisterWorkerRequest registerWorkerRequest)
         {
-            var registerWorkerRequest = WorkerRegistrationRequestBase.Create<RegisterWorkerRequest>();
-
+ 
             var registerWorkerResponse =
-                ServerChannel.SendRequest<Response>(UriFactory.Create(EndPoint.RegisterAgent),
+                ServerChannel.SendRequest<Response<Guid>>(UriFactory.Create(EndPoint.RegisterAgent),
                     registerWorkerRequest);
 
             registerWorkerResponse.Succeeded.Should().BeTrue();
-          
+            return registerWorkerResponse.Payload;
+
         }
     }
 }

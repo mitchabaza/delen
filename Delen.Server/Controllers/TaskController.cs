@@ -4,6 +4,8 @@ using System.Web.Mvc;
 using Delen.Core.Communication;
 using Delen.Core.Services;
 using Delen.Core.Tasks;
+using Delen.Server.Views;
+using log4net;
 using Newtonsoft.Json;
 
 namespace Delen.Server.Controllers
@@ -11,22 +13,25 @@ namespace Delen.Server.Controllers
     public class TaskController : BaseController
     {
         private readonly ITaskService _taskService;
-
-        public TaskController(ITaskService taskService)
+        private readonly IWorkerRequestContext _context;
+       public TaskController(ITaskService taskService, IWorkerRequestContext context)
         {
             _taskService = taskService;
+            _context = context;
         }
-        [ValidateWorkerRequest(true)]
+
+        [ValidateWorkerRequestAttribute(true)]
         public new ActionResult Request()
         {
-            return Json(_taskService.RequestWork(HttpContext.Request.UserIPAddress()));
+           
+            return Json(_taskService.RequestWork(new WorkerRequest(_context.Token)));
         }
-        [ValidateWorkerRequest(true)]
+        [ValidateWorkerRequestAttribute(true)]
         public ActionResult Complete(TaskExecutionResult executionResult)
         {
-            return Json(_taskService.WorkComplete(executionResult));
+            return Json(_taskService.WorkComplete(new WorkerRequest<TaskExecutionResult>(_context.Token) { Body = executionResult }));
         }
-        [ValidateWorkerRequest(true)]
+        [ValidateWorkerRequestAttribute(true)]
         public ActionResult Progess(TaskProgress progress)
         {
             Console.WriteLine(progress.Time + " " + progress.Output);

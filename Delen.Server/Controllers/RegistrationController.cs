@@ -22,9 +22,7 @@ namespace Delen.Server.Controllers
             _repository = repository;
         }
 
-        [HttpPost]
-        [ValidateWorkerRequest(false)]
-    
+        [HttpPost]       
         public ActionResult Remove(UnregisterWorkerRequest request)
         {
             return Json(_registry.UnRegister(request));
@@ -37,15 +35,14 @@ namespace Delen.Server.Controllers
         }
 
         [HttpPost]
-        [ValidateWorkerRequest(false)]
-        public ActionResult Add(RegisterWorkerRequest request)
+         public ActionResult Add(RegisterWorkerRequest request)
         {
             return Json(_registry.Register(request));
         }
 
         public ActionResult List()
         {
-            return Json(_repository.Query<WorkItem>());
+            return Json(_repository.Query<WorkerRegistration>());
         }
     }
 }

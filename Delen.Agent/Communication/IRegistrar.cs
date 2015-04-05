@@ -1,8 +1,11 @@
-﻿namespace Delen.Agent.Communication
+﻿using System;
+using Delen.Core.Communication;
+
+namespace Delen.Agent.Communication
 {
     public interface IRegistrar
     {
-        bool Register();
+        Response<Guid> Register(RegisterWorkerRequest request);
         bool UnRegister();
     }
 }

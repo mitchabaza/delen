@@ -1,4 +1,6 @@
-﻿namespace Delen.Common
+﻿using System.Net;
+
+namespace Delen.Common
 {
     public static class ServerConfiguration
     {
@@ -33,6 +35,7 @@
         public static class Headers
         {
             public const string Version = "ClientVersion";
+            public const string WorkerRegistrationToken = "RegistrationToken";
         }
     }
 }

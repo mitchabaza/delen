@@ -3,6 +3,7 @@ using StringFormat;
 
 namespace Delen.Agent.Communication
 {
+    
     public class UriFactory : IUriFactory
     {
         protected readonly Settings Settings;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Delen.Server.Configuration;
@@ -15,6 +16,10 @@ namespace Delen.Server
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof(MvcApplication));
 
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            Logger.Info("Request: " + System.Web.HttpContext.Current.Request.RawUrl );
+        }
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();

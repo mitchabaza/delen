@@ -5,6 +5,7 @@ using Autofac;
 using Delen.Agent.Abstractions;
 using Delen.Agent.Communication;
 using Delen.Agent.Tasks;
+using log4net;
 
 namespace Delen.Agent
 {
@@ -12,7 +13,7 @@ namespace Delen.Agent
     {
         private static Application _application;
         private static Thread _thread;
-
+        private static ILog Logger = LogManager.GetLogger(typeof (Program));
         public static void Start(bool testMode)
         {
             log4net.Config.XmlConfigurator.Configure();
@@ -22,11 +23,18 @@ namespace Delen.Agent
 
         private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
+      
             Start(args.Length > 0 && args[0].ToLower() == "testmode");
             Console.WriteLine(@"Agent is now running");
             Console.WriteLine(@"Hit any key to terminate....");
             Console.ReadKey();
             Stop();
+        }
+
+        private static void UnhandledExceptionTrapper(object sender, UnhandledExceptionEventArgs e)
+        {
+            Logger.Error(e.ExceptionObject);
         }
 
 
@@ -44,7 +52,7 @@ namespace Delen.Agent
         private static Thread Run(bool testMode = false)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterAssemblyTypes(typeof (Program).Assembly).AsSelf().AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof (Program).Assembly).AsSelf().AsImplementedInterfaces().SingleInstance();
             if (testMode)
             {
                 builder.RegisterType<UriFactoryForTesting>().AsImplementedInterfaces().SingleInstance();

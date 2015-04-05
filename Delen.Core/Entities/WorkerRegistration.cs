@@ -12,23 +12,25 @@ namespace Delen.Core.Entities
         private WorkerRegistration() : base()
         {
         }
-         public static WorkerRegistration Create(string ipAddress, string host)
+        
+        public static WorkerRegistration Create(string ipAddress, string name)
         {
             Requires.NotNull(ipAddress, "ipAddress");
-            var worker = new WorkerRegistration(ipAddress, host);
-            worker.Activate();
-             worker.CreationDate = DateTime.Now;
+            var worker = new WorkerRegistration(ipAddress, name) {CreationDate = DateTime.Now, Token = Guid.NewGuid()};
+
             return worker;
         }
 
-       
-        private WorkerRegistration(string ipAddress, string host)
+        public Guid Token { get; private set; }
+
+
+        private WorkerRegistration(string ipAddress, string name)
         {
             IPAddress = ipAddress;
-            Host = host;
+            Name = name;
         }
         
-        public string Host { get; private set; }
+        public string Name { get; private set; }
         public string IPAddress { get; private set; }
         public DateTime AsOf { get; internal set; }
         public IEnumerable<TaskHistory> History { get; private set; }

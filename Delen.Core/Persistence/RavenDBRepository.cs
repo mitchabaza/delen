@@ -13,12 +13,12 @@ namespace Delen.Core.Persistence
             _store = store;
         }
 
-        public void Delete(Entity item)
+        public void Delete<T>(T item) where T : Entity
         {
 
             using (var session = _store.OpenSession())
             {
-                var entity = session.Load<Entity>(item.Id);
+                var entity = session.Load<T>(item.Id);
                 session.Delete(entity);
                 session.SaveChanges();
             }

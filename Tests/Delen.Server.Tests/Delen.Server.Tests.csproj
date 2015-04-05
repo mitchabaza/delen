@@ -179,6 +179,7 @@
     <Compile Include="Unit\InMemoryRepository.cs" />
     <Compile Include="Unit\TaskServiceFixture.cs" />
     <Compile Include="Unit\TestExtensions.cs" />
+    <Compile Include="Unit\WorkerRegistryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

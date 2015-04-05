@@ -58,7 +58,7 @@ namespace Delen.Server.Tests.Unit
             WorkItems.Add(item as WorkItem);
         }
 
-        public void Delete(Entity item)
+        public void Delete<T>(T item) where T : Entity
         {
             var itemToDelete = WorkItems.SingleOrDefault(s => s.Id.Equals(item.Id));
             WorkItems.Remove(itemToDelete);

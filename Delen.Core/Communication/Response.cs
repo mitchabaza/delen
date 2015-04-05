@@ -1,4 +1,5 @@
-﻿using Delen.Common.Serialization;
+﻿using System.Linq.Expressions;
+using Delen.Common.Serialization;
 
 namespace Delen.Core.Communication
 {
@@ -11,13 +12,17 @@ namespace Delen.Core.Communication
             return new Response(true,"");
         }
            
+        private Response(){}
         public Response(bool succeeded, string message )
         {
             Succeeded = succeeded;
             Message = message;
              
         }
-       
+        public Response(bool succeeded):this(true, string.Empty)
+        {
+
+        }
         public bool Succeeded { get; set; }
         public string Message { get; set; }
 

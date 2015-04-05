@@ -28,8 +28,9 @@ namespace Delen.Core.Services
             _registry = registry;
         }
 
-        public Response WorkComplete(TaskExecutionResult result)
+        public Response WorkComplete(WorkerRequest<TaskExecutionResult> result2)
         {
+            var            result = result2.Body;
             var workItem = _repository.Get<WorkItem>(result.WorkItemId);
             if (workItem == null)
             {
@@ -45,14 +46,16 @@ namespace Delen.Core.Services
             return Response.Failure(string.Format("WorkItem must be InProgress before it can be completed {0}", workItem.ToString()));
         }
 
-        public Response<TaskRequest> RequestWork(IPAddress ip)
-        {
+
+
+        public Response<TaskRequest> RequestWork(WorkerRequest request)
+         {
             Logger.Info(string.Format("RequestWork Begin {0} {1}", DateTime.Now.Ticks,
                 Thread.CurrentThread));
 
             lock (_object)
             {
-                var registration = _registry.GetRegistration(ip);
+                var registration = _registry.GetRegistration(request.Token);
                 Assumes.NotNull(registration);
                 WorkItem workItem =
                     _repository.Query<WorkItem>().FirstOrDefault(wi => wi.Status == (WorkItemStatus.Pending));
