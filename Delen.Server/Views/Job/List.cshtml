@@ -1,6 +1,9 @@
 ﻿
 @using System.Collections
-@model IEnumerable<Delen.Core.Entities.Job> 
+@using Delen.Core.Entities
+@using Mono.CSharp
+@using Raven.Abstractions.Extensions
+@model IEnumerable<Delen.Server.ViewModel.JobViewModel> 
 
  
 @foreach (var job in Model)
@@ -14,7 +17,11 @@
        <div>
       Arguments: <span> @job.Arguments </span>
      </div> 
-      <div>
-          <a href="@Url.Action("GetArtifacts", new{id = job.Id})">Download Artifacts </a>
-     </div> 
+    <div>
+        @if (job.WorkItems.All(w => w.Status == WorkItemStatus.Successful))
+        {
+            <a href="@Url.Action("GetArtifacts", new{id = job.Id})">Download Artifacts </a>
+
+        }
+    </div> 
 }

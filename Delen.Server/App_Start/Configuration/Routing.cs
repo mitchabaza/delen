@@ -11,14 +11,7 @@ namespace Delen.Server.Configuration
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
 
-            routes.MapRoute("Test", ServerConfiguration.WebApplication.TestModeUrlPrefix + "/{controller}/{action}/{id}",
-             new
-             {
-                 controller = "Home",
-                 action = "Index",
-                 id = UrlParameter.Optional,
-                 database = ServerConfiguration.Database.TestName
-             });
+           
             routes.MapRoute("Default", "{controller}/{action}/{id}",
                 new
                 {
@@ -28,8 +21,15 @@ namespace Delen.Server.Configuration
                     database = ServerConfiguration.Database.Name
                 }
                 );
-            
-        
+
+            routes.MapRoute("Test", ServerConfiguration.WebApplication.TestModeUrlPrefix + "/{controller}/{action}/{id}",
+                new
+                {
+                    controller = "Home",
+                    action = "Index",
+                    id = UrlParameter.Optional,
+                    database = ServerConfiguration.Database.TestName
+                });
         }
 
         public void Configure()

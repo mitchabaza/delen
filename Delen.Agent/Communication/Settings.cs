@@ -27,7 +27,7 @@ namespace Delen.Agent.Communication
             using (var textReader = File.OpenText(file))
             {
                 var text = textReader.ReadToEnd();
-                var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 var dict = lines.Select(line => line.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries)).ToDictionary(keyValue => keyValue[0], keyValue => keyValue[1]);
                 return new Settings(Convert.ToInt32(dict["port"]), dict["server"], dict["appName"], dict["workingDirectory"]);
             }

@@ -29,7 +29,7 @@ namespace Delen.Core.Services
 
             var partitions = new List<T>[totalPartitions];
 
-            int maxSize = (int) Math.Ceiling(list.Count/(double) totalPartitions);
+            var maxSize = (int) Math.Ceiling(list.Count/(double) totalPartitions);
             int k = 0;
 
             for (int i = 0; i < partitions.Length; i++)

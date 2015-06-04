@@ -14,19 +14,19 @@ namespace Delen.Core.Services
     {
         private readonly IMappingEngine _mappingEngine;
         private readonly IDocumentStore _docStore;
-        private readonly IJobChunkingStrategyFactory _factory;
+        private readonly IJobChunkingStrategyFactory _jobSplitStrategyFactory;
 
-        public JobQueue(IMappingEngine workerRegistry, IDocumentStore docStore, IJobChunkingStrategyFactory factory)
+        public JobQueue(IMappingEngine workerRegistry, IDocumentStore docStore, IJobChunkingStrategyFactory jobSplitStrategyFactory)
         {
             _mappingEngine = workerRegistry;
             _docStore = docStore;
-            _factory = factory;
+            _jobSplitStrategyFactory = jobSplitStrategyFactory;
         }
 
-        public CreateEntityResponse<int> Queue(AddJobRequest jobRequest)
+        public CreateEntityResponse<int> Add(AddJobRequest jobRequest)
         {
             var job = _mappingEngine.Map<AddJobRequest, Job>(jobRequest);
-            job.SetJobSplittingStrategy(_factory.Create(job));
+            job.SetJobSplittingStrategy(_jobSplitStrategyFactory.Create(job));
             var workItems = job.Split();
             using (var tx = new TransactionScope())
             {

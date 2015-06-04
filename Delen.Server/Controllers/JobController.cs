@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -28,18 +29,26 @@ namespace Delen.Server.Controllers
 
         public ActionResult List()
         {
-            return View("List", _repository.Query<Job>().Select(s => s).ToList());
+            IEnumerable<JobViewModel> jobModel = _repository.Query<Job>().ToList().Select(job => new JobViewModel(job)).ToList();
+            foreach (var job     in jobModel)
+            {
+                var list = job.WorkItemsInt.Select(workItem => _repository.Get<WorkItem>(workItem)).ToList();
+                job.WorkItems = list;
+            }
+            return View("List", jobModel);
         }
+
         public ActionResult Get(int id)
         {
             return Json(_repository.Get<Job>(id));
         }
+
         public ActionResult GetArtifacts(int id)
         {
-             var workItems = _repository.Query<WorkItem>().Where(w => w.Job.Id == id).ToList();
+            var workItems = _repository.Query<WorkItem>().Where(w => w.Job.Id == id).ToList();
             if (workItems.Count == 0)
             {
-                return Json(string.Format("No Job found with Id {0}", id));
+                return Json(string.Format("Job {0} has not yet run you dummy!", id));
             }
             using (var memoryStream = new MemoryStream())
             {
@@ -55,13 +64,13 @@ namespace Delen.Server.Controllers
                             writer.Write(workItem.Artifacts);
                         }
                     }
-                 }
+                }
 
                 return File(memoryStream.ToArray(), "application/zip", string.Format("Artifacts_Job{0}.zip", id));
             }
         }
 
-   
+
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -69,7 +78,7 @@ namespace Delen.Server.Controllers
 
         public ActionResult Queue(AddJobRequest cmd)
         {
-            return Json(_queue.Queue(cmd));
+            return Json(_queue.Add(cmd));
         }
 
         public ActionResult Cancel(CancelJobRequest cmd)
@@ -77,5 +86,4 @@ namespace Delen.Server.Controllers
             return Json(_queue.Cancel(cmd));
         }
     }
-
 }

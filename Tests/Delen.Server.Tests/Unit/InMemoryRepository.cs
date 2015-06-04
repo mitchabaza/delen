@@ -7,6 +7,7 @@ using System.Threading;
 using Delen.Core;
 using Delen.Core.Entities;
 using Delen.Core.Persistence;
+using Raven.Client;
 
 namespace Delen.Server.Tests.Unit
 {
@@ -69,6 +70,11 @@ namespace Delen.Server.Tests.Unit
             PreQueryAction();
 
             return WorkItems.AsQueryable().Cast<T>();
+        }
+
+        public IQueryable<T> QueryWithPreload<T>(Action<IDocumentSession> preload) where T : class
+        {
+            throw new NotImplementedException();
         }
     }
 }

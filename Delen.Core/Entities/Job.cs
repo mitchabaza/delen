@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CuttingEdge.Conditions;
 using Delen.Common.Serialization;
 using Delen.Core.Communication;
@@ -18,13 +19,14 @@ namespace Delen.Core.Entities
        
         private IJobChunkingStrategy _strategy;
 
-        
+        public IList<DenormalizedReference<WorkItem>> WorkItems { get; private set; }
+
         public string Runner { get; private set; }
         public string Arguments { get; private set; }
         public byte[] WorkDirectoryArchive { get; private set; }
         public string Name { get; private set; }
         public string InitiatedBy { get; private set; }
-
+        
         public static Job Create(string runner, string initiatedBy, string arguments, byte[] workDirectoryArchive)
         {
             Condition.Requires(runner, "runner").IsNotNullOrWhiteSpace();
@@ -62,6 +64,7 @@ namespace Delen.Core.Entities
                 workItems.Add(workItem);
             }
 
+            WorkItems = workItems.Select(w=>new DenormalizedReference<WorkItem>(w)).ToList();
             return workItems;
         }
 

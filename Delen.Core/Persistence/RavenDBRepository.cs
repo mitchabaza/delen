@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq; 
 using Delen.Core.Entities;
 using Raven.Client;
 
@@ -31,7 +32,16 @@ namespace Delen.Core.Persistence
                 return session.Query<T>();
             }
         }
- 
+
+        public IQueryable<T> QueryWithPreload<T>(Action<IDocumentSession> preload) where T : class
+        {
+            using (var session = _store.OpenSession())
+            {
+                preload(session);
+                return session.Query<T>();
+            }
+        }
+
 
         public T Get<T>(int id) where T : class
         {
