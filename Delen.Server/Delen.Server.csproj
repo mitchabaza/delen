@@ -226,32 +226,7 @@
   <ItemGroup>
     <Compile Include="App_Start\Configuration\Filters.cs" />
     <Compile Include="App_Start\Configuration\Routing.cs" />
-    <Content Include="App_Data\raven-data.ico" />
     <Content Include="Global.asax" />
-    <Content Include="App_Data\Data" />
-    <Content Include="App_Data\IndexDefinitions\Auto%252fWorkerRegistrations%252fByIPAddress.index" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\CommitPoints\0000000000000000002\index.commitPoint" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\CommitPoints\0000000000000000002\segments_2" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\CommitPoints\0000000000000000005\index.commitPoint" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\CommitPoints\0000000000000000005\segments_5" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\index.version" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\segments.gen" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\segments_9" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_0.cfs" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_1.cfs" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_1_1.del" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_2.cfs" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_2_1.del" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_3.cfs" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_4.cfs" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_5.cfs" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_6.cfs" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_6_1.del" />
-    <Content Include="App_Data\Indexes\Auto%252fWorkerRegistrations%252fByIPAddress\_7.cfs" />
-    <Content Include="App_Data\logs\RVN.log" />
-    <Content Include="App_Data\logs\RVNres00001.jrs" />
-    <Content Include="App_Data\logs\RVNres00002.jrs" />
-    <Content Include="App_Data\system\RVN.chk" />
     <None Include="Raven.Studio.xap">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
