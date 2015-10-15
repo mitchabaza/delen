@@ -25,6 +25,8 @@ bld/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+Delen.Server/App_Data/*.*
+
 #NUNIT
 *.VisualState.xml
 TestResult.xml
