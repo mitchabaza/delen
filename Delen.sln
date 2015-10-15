@@ -1,12 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Core", "Delen.Core\Delen.Core.csproj", "{493AB956-B0DD-4F55-801B-362D8D7D2C00}"
-EndProject
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F0EA3C40-3E06-4A42-85DC-91C7A89C50A0}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{540BDA92-935B-474F-952F-91F24704C17D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F65AA319-578C-4D09-9CB7-56FB32F123B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{34C729E5-6D60-46AD-A7B6-05FBC906D535}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.txt = ReadMe.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Core", "Delen.Core\Delen.Core.csproj", "{493AB956-B0DD-4F55-801B-362D8D7D2C00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Server", "Delen.Server\Delen.Server.csproj", "{FECE9A5A-49ED-4F72-82CC-12F9B98CB0BE}"
 EndProject
@@ -14,13 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Common", "Delen.Share
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Agent", "Delen.Agent\Delen.Agent.csproj", "{C8F4992F-7E04-45D2-8FE0-75C71A2A94A9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{540BDA92-935B-474F-952F-91F24704C17D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Agent.Tests", "Tests\Delen.Agent.Tests\Delen.Agent.Tests.csproj", "{E98FD5F5-2A9F-4338-9E7D-A6897FAC3F4C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Server.Tests", "Tests\Delen.Server.Tests\Delen.Server.Tests.csproj", "{170E8286-D9AF-4C01-B832-2810CDF639E9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F65AA319-578C-4D09-9CB7-56FB32F123B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.JobSimulator", "Tools\Delen.JobSimulator\Delen.JobSimulator.csproj", "{D6D26315-7EAC-4383-AAA6-E4866645B78F}"
 EndProject
@@ -33,11 +40,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.Test.NUnitSample", "Tests\Delen.Test.NUnitSample\Delen.Test.NUnitSample.csproj", "{6A9EC382-9F6D-44CB-A9C8-1C3643D6BF16}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delen.TestConsoleApp", "Tests\Delen.TestConsoleApp\Delen.TestConsoleApp.csproj", "{A896BECC-EF8D-470F-A79A-DF003A9D7CFB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{34C729E5-6D60-46AD-A7B6-05FBC906D535}"
-	ProjectSection(SolutionItems) = preProject
-		ReadMe.txt = ReadMe.txt
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -188,9 +190,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E98FD5F5-2A9F-4338-9E7D-A6897FAC3F4C} = {540BDA92-935B-474F-952F-91F24704C17D}
 		{170E8286-D9AF-4C01-B832-2810CDF639E9} = {540BDA92-935B-474F-952F-91F24704C17D}
+		{D6D26315-7EAC-4383-AAA6-E4866645B78F} = {F65AA319-578C-4D09-9CB7-56FB32F123B0}
 		{60F8EDC3-F0E4-4151-98CC-A7F9527AB21C} = {540BDA92-935B-474F-952F-91F24704C17D}
 		{6A9EC382-9F6D-44CB-A9C8-1C3643D6BF16} = {540BDA92-935B-474F-952F-91F24704C17D}
 		{A896BECC-EF8D-470F-A79A-DF003A9D7CFB} = {540BDA92-935B-474F-952F-91F24704C17D}
-		{D6D26315-7EAC-4383-AAA6-E4866645B78F} = {F65AA319-578C-4D09-9CB7-56FB32F123B0}
 	EndGlobalSection
 EndGlobal
