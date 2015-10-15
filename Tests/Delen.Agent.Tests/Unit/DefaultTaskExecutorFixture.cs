@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using Delen.Agent.Abstractions;
 using Delen.Agent.Communication;
@@ -17,6 +16,7 @@ using Ploeh.AutoFixture;
 namespace Delen.Agent.Tests.Unit
 {
     [TestFixture]
+    [Category("Unit")]
     public class DefaultTaskExecutorFixture : FixtureBase
     {
         private Mock<IFileSystem> _fileSystemMock;
@@ -68,7 +68,7 @@ namespace Delen.Agent.Tests.Unit
           
             var task = AutoFixture.Create<Task>();
             var expectedTaskResult = new TaskExecutionResult(TaskExecutionResult.TaskExecutionStatus.Failed, task.WorkItemId, null);
-            var exception = AutoFixture.Create<Win32Exception>();
+            var exception = AutoFixture.Create< System.ComponentModel.Win32Exception >();
             expectedTaskResult.AddException(exception);
 
             _processRunner.Setup(p => p.Start(It.IsAny<ProcessStartInfo>(), It.IsAny<EventHandler<string>>(), It.IsAny<EventHandler<string>>())).Throws(exception);

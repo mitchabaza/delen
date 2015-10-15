@@ -21,6 +21,8 @@ using Ploeh.AutoFixture;
 namespace Delen.Server.Tests.Unit
 {
     [TestFixture]
+    [Category("Unit")]
+
     public class TaskServiceFixture : FixtureBase
     {
         public override void SetupTest()

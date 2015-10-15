@@ -16,6 +16,9 @@ using Ploeh.AutoFixture;
 
 namespace Delen.Server.Tests.Unit
 {
+    [TestFixture]
+    [Category("Unit")]
+
     public class WorkerRegistryFixture : FixtureBase
     {
         private Mock<IMappingEngine> _mapper;

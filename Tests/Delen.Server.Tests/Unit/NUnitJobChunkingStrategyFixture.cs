@@ -14,6 +14,8 @@ using Ploeh.AutoFixture;
 
 namespace Delen.Server.Tests.Unit
 {
+    [TestFixture]
+    [Category("Unit")]
     public class NUnitJobChunkingStrategyFixture : FixtureBase
     {
         private NUnitJobChunkingStrategy _strategy;

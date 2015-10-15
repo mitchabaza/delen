@@ -12,6 +12,8 @@ using Raven.Client;
 namespace Delen.Server.Tests.Unit
 {
     [TestFixture]
+    [Category("Unit")]
+
     public class AutoFacFixture
     {
         private static IDocumentStore _documentStore;

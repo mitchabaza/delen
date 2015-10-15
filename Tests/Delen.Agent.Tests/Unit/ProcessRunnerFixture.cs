@@ -9,6 +9,7 @@ namespace Delen.Agent.Tests.Unit
 {
 
     [TestFixture]
+    [Category("Unit")]
     public class ProcessRunnerFixture : ProcessRunner
     {
         protected override IProcess CreateProcess(ProcessStartInfo info)
