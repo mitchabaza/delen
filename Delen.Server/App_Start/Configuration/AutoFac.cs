@@ -156,7 +156,7 @@ namespace Delen.Server.Configuration
             var documentStore = new EmbeddableDocumentStore
             {
                 DataDirectory = "Test_Data",
-                UseEmbeddedHttpServer = true,
+                UseEmbeddedHttpServer = false,
             };
             documentStore.Configuration.Port = ServerConfiguration.Database.EmbeddedMode.RavenPort;
 
